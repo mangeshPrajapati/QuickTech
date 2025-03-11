@@ -7,6 +7,15 @@ import { z } from "zod";
 import multer from "multer";
 import { randomBytes } from "crypto";
 import path from "path";
+import Stripe from "stripe";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2023-10-16",
+});
 
 // Configure multer for file uploads
 const storage_config = multer.diskStorage({
@@ -211,28 +220,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Payment webhook (simplified for this implementation)
-  app.post("/api/payment/webhook", async (req, res) => {
+  // Stripe payment routes
+  app.post("/api/payment/create-intent", isAuthenticated, async (req, res) => {
     try {
-      const { orderId, status } = req.body;
+      const { orderId } = req.body;
       
-      if (!orderId || !status) {
-        return res.status(400).json({ message: "Invalid payment data" });
+      if (!orderId) {
+        return res.status(400).json({ message: "Order ID is required" });
       }
 
-      const id = parseInt(orderId);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid order ID" });
-      }
-      
-      const updatedOrder = await storage.updatePaymentStatus(id, status);
-      if (!updatedOrder) {
+      const order = await storage.getOrder(parseInt(orderId));
+      if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
-      
-      res.json({ success: true });
+
+      // Create a PaymentIntent with the order amount and currency
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: order.total_amount * 100, // convert to cents
+        currency: "inr",
+        metadata: {
+          orderId: order.id.toString(),
+          userId: order.user_id.toString()
+        }
+      });
+
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+      });
     } catch (error) {
-      res.status(500).json({ message: "Payment webhook processing failed" });
+      console.error("Payment intent creation error:", error);
+      res.status(500).json({ message: "Error creating payment intent" });
+    }
+  });
+
+  // Stripe webhook
+  app.post("/api/payment/webhook", async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    
+    try {
+      const event = stripe.webhooks.constructEvent(
+        req.body,
+        sig || '',
+        process.env.STRIPE_WEBHOOK_SECRET || ''
+      );
+
+      // Handle the event
+      switch (event.type) {
+        case 'payment_intent.succeeded':
+          const paymentIntent = event.data.object;
+          const orderId = parseInt(paymentIntent.metadata.orderId);
+          await storage.updatePaymentStatus(orderId, "completed");
+          break;
+        case 'payment_intent.payment_failed':
+          const failedPaymentIntent = event.data.object;
+          const failedOrderId = parseInt(failedPaymentIntent.metadata.orderId);
+          await storage.updatePaymentStatus(failedOrderId, "failed");
+          break;
+      }
+
+      res.json({ received: true });
+    } catch (error) {
+      console.error("Webhook error:", error);
+      res.status(400).json({ message: "Webhook error" });
     }
   });
 
