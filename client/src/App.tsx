@@ -10,6 +10,7 @@ import ServiceDetailPage from "@/pages/service-detail-page";
 import DashboardPage from "@/pages/dashboard-page";
 import OrderPage from "@/pages/order-page";
 import AdminPage from "@/pages/admin-page";
+import OrderSuccessPage from "@/pages/order-success-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/services/:id" component={ServiceDetailPage} />
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/orders/:id" component={OrderPage} />
+      <ProtectedRoute path="/order-success" component={OrderSuccessPage} />
       <ProtectedRoute path="/admin" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>
