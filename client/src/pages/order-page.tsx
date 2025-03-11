@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import OrderStatusBadge from "@/components/order/order-status-badge";
+import PaymentForm from "@/components/payment-form";
 import { 
   Card, 
   CardContent, 
@@ -96,40 +97,34 @@ export default function OrderPage() {
   const isLoading = isOrderLoading || (!!order && isServiceLoading);
   const error = orderError || serviceError;
 
-  // Process payment
-  const handlePayment = async () => {
+  // Handle payment success
+  const handlePaymentSuccess = () => {
     if (!order) return;
     
-    setIsProcessingPayment(true);
+    // Invalidate queries to refresh data
+    queryClient.invalidateQueries({ queryKey: [`/api/orders/${id}`] });
+    queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
     
-    try {
-      // Simulate payment API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Update payment status
-      await apiRequest("POST", "/api/payment/webhook", {
-        orderId: order.id,
-        status: "completed"
-      });
-      
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ queryKey: [`/api/orders/${id}`] });
-      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
-      
-      setIsPaymentDialogOpen(false);
-      toast({
-        title: "Payment successful",
-        description: "Your payment has been processed successfully.",
-      });
-    } catch (error) {
-      toast({
-        title: "Payment failed",
-        description: "There was an error processing your payment. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessingPayment(false);
-    }
+    // Close the payment dialog
+    setIsPaymentDialogOpen(false);
+    
+    // Show success toast
+    toast({
+      title: "Payment successful",
+      description: "Your payment has been processed successfully.",
+    });
+    
+    // Redirect to order success page
+    navigate(`/order-success?orderId=${order.id}`);
+  };
+  
+  // Handle payment error
+  const handlePaymentError = (error: Error) => {
+    toast({
+      title: "Payment failed",
+      description: error.message || "There was an error processing your payment. Please try again.",
+      variant: "destructive",
+    });
   };
 
   // Cancel order

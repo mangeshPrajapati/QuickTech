@@ -211,31 +211,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Simple payment route for marking payments as completed (to be replaced with real payment gateway later)
+  // Payment processing route for Indian payment methods
   app.post("/api/payment/process", isAuthenticated, async (req, res) => {
     try {
-      const { orderId } = req.body;
+      const { orderId, paymentMethod } = req.body;
       
       if (!orderId) {
-        return res.status(400).json({ message: "Order ID is required" });
+        return res.status(400).json({ 
+          success: false,
+          message: "Order ID is required" 
+        });
+      }
+      
+      if (!paymentMethod) {
+        return res.status(400).json({ 
+          success: false,
+          message: "Payment method is required" 
+        });
+      }
+      
+      // Validate payment method
+      const validPaymentMethods = ['upi', 'netbanking', 'card', 'wallet'];
+      if (!validPaymentMethods.includes(paymentMethod)) {
+        return res.status(400).json({ 
+          success: false,
+          message: "Invalid payment method"
+        });
       }
 
       const order = await storage.getOrder(parseInt(orderId));
       if (!order) {
-        return res.status(404).json({ message: "Order not found" });
+        return res.status(404).json({ 
+          success: false,
+          message: "Order not found" 
+        });
+      }
+      
+      // Check if the order belongs to the current user
+      if (order.user_id !== req.user!.id) {
+        return res.status(403).json({ 
+          success: false,
+          message: "Not authorized to pay for this order" 
+        });
+      }
+      
+      // Check if the order is already paid
+      if (order.payment_status === "completed") {
+        return res.status(400).json({ 
+          success: false,
+          message: "Order is already paid" 
+        });
       }
 
-      // For now, just mark the payment as completed
-      // This will be replaced with actual payment gateway integration later
+      // For now, simulate payment processing
+      // In a real application, this would connect to a payment gateway API
+      
+      // Payment simulation logic (success rate 100% for now)
+      const isPaymentSuccessful = true;
+      
+      if (!isPaymentSuccessful) {
+        return res.status(400).json({
+          success: false,
+          message: "Payment failed. Please try again."
+        });
+      }
+      
+      // Mark the payment as completed
       const updatedOrder = await storage.updatePaymentStatus(order.id, "completed");
       
       res.json({
         success: true,
+        message: "Payment processed successfully",
         order: updatedOrder
       });
     } catch (error) {
       console.error("Payment processing error:", error);
-      res.status(500).json({ message: "Error processing payment" });
+      res.status(500).json({ 
+        success: false,
+        message: "Error processing payment" 
+      });
     }
   });
 
