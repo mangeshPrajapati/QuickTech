@@ -51,6 +51,47 @@ export class MemStorage implements IStorage {
     
     // Pre-populate services
     this.initializeServices();
+    
+    // Add a test user
+    this.initializeTestUser();
+  }
+  
+  // Initialize a test user for demo purposes
+  private async initializeTestUser() {
+    // Import hashPassword function from auth.ts
+    const { hashPassword } = await import('./auth');
+    
+    // Check if test user already exists
+    const existingUser = await this.getUserByUsername('testuser');
+    if (!existingUser) {
+      const normalUser = await this.createUser({
+        username: 'testuser',
+        password: await hashPassword('password123'),
+        name: 'Test User',
+        email: 'test@example.com',
+        phone: '9876543210',
+        address: 'Test Address, Mumbai, India'
+      });
+      
+      // Manually update role for admin user
+      const adminUser = await this.createUser({
+        username: 'admin',
+        password: await hashPassword('admin123'),
+        name: 'Admin User',
+        email: 'admin@quicktech.com',
+        phone: '9876543211',
+        address: 'Admin Office, Delhi, India'
+      });
+      
+      // Update admin role
+      const updatedAdmin = {
+        ...adminUser,
+        role: 'admin'
+      };
+      this.users.set(adminUser.id, updatedAdmin);
+      
+      console.log('Test users created successfully.');
+    }
   }
 
   // User methods
@@ -73,10 +114,16 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
     const now = new Date();
+    // Set nulls for optional fields if they're undefined
+    const phone = insertUser.phone === undefined ? null : insertUser.phone;
+    const address = insertUser.address === undefined ? null : insertUser.address;
+    
     const user: User = { 
-      ...insertUser, 
+      ...insertUser,
+      phone,
+      address, 
       id, 
-      role: "user", 
+      role: "user", // Default role for regular users
       created_at: now 
     };
     this.users.set(id, user);
@@ -101,7 +148,19 @@ export class MemStorage implements IStorage {
   async createService(insertService: InsertService): Promise<Service> {
     const id = this.serviceIdCounter++;
     const now = new Date();
-    const service: Service = { ...insertService, id, created_at: now };
+    
+    // Set nulls for optional fields if they're undefined
+    const badge = insertService.badge === undefined ? null : insertService.badge;
+    const badge_color = insertService.badge_color === undefined ? null : insertService.badge_color;
+    
+    const service: Service = { 
+      ...insertService, 
+      badge,
+      badge_color,
+      id, 
+      created_at: now 
+    };
+    
     this.services.set(id, service);
     return service;
   }
