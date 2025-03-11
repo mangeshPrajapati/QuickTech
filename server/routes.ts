@@ -7,11 +7,24 @@ import { z } from "zod";
 import multer from "multer";
 import { randomBytes } from "crypto";
 import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import * as fs from "fs";
+
+// Get the directory path for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, "../uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 // Configure multer for file uploads
 const storage_config = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../uploads"));
+    cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
     const randomName = randomBytes(16).toString("hex");
