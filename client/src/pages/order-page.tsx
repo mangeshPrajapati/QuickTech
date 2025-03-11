@@ -432,8 +432,8 @@ export default function OrderPage() {
                               Make a payment to process your document order
                             </DialogDescription>
                           </DialogHeader>
-                          <div className="space-y-4 py-4">
-                            <div className="bg-gray-50 p-4 rounded-md">
+                          <div className="py-2">
+                            <div className="bg-gray-50 p-4 rounded-md mb-4">
                               <h3 className="font-medium mb-2">Order Summary</h3>
                               <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
@@ -451,59 +451,13 @@ export default function OrderPage() {
                               </div>
                             </div>
                             
-                            {/* This is a simulated payment form - in production, you would integrate
-                                 with a real payment processor */}
-                            <div className="space-y-3">
-                              <div>
-                                <label className="block text-sm mb-1">Card Number</label>
-                                <input 
-                                  type="text" 
-                                  className="w-full border border-gray-300 rounded-md p-2" 
-                                  placeholder="4242 4242 4242 4242" 
-                                />
-                              </div>
-                              <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                  <label className="block text-sm mb-1">Expiry Date</label>
-                                  <input 
-                                    type="text" 
-                                    className="w-full border border-gray-300 rounded-md p-2" 
-                                    placeholder="MM/YY" 
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-sm mb-1">CVV</label>
-                                  <input 
-                                    type="text" 
-                                    className="w-full border border-gray-300 rounded-md p-2" 
-                                    placeholder="123" 
-                                  />
-                                </div>
-                              </div>
-                              <div>
-                                <label className="block text-sm mb-1">Name on Card</label>
-                                <input 
-                                  type="text" 
-                                  className="w-full border border-gray-300 rounded-md p-2" 
-                                  placeholder="John Doe" 
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex justify-end space-x-2">
-                            <Button variant="outline" onClick={() => setIsPaymentDialogOpen(false)}>
-                              Cancel
-                            </Button>
-                            <Button onClick={handlePayment} disabled={isProcessingPayment}>
-                              {isProcessingPayment ? (
-                                <>
-                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                  Processing...
-                                </>
-                              ) : (
-                                <>Pay ₹{order.total_amount}</>
-                              )}
-                            </Button>
+                            {/* New Indian payment form component */}
+                            <PaymentForm 
+                              orderId={order.id}
+                              amount={order.total_amount}
+                              onSuccess={handlePaymentSuccess}
+                              onError={handlePaymentError}
+                            />
                           </div>
                         </DialogContent>
                       </Dialog>
