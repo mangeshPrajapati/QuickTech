@@ -199,17 +199,6 @@ export class MemStorage implements IStorage {
         badge_color: "yellow"
       },
       {
-        name: "CSC Services",
-        description: "All Common Service Center (CSC) services including certificates and registrations.",
-        category: "Government",
-        price: 600,
-        processing_time: "3-5 days",
-        requirements: "Varies depending on specific service required",
-        icon: "fa-building",
-        badge: "Multiple Services",
-        badge_color: "purple"
-      },
-      {
         name: "Passport",
         description: "New passport application, renewal and other passport-related services.",
         category: "Travel",
@@ -219,6 +208,105 @@ export class MemStorage implements IStorage {
         icon: "fa-passport",
         badge: "Priority Service",
         badge_color: "red"
+      },
+      {
+        name: "CSC Services",
+        description: "Comprehensive Common Service Center (CSC) services including utility payments, banking, insurance, and various government services.",
+        category: "Government",
+        price: 600,
+        processing_time: "3-5 days",
+        requirements: "Varies depending on specific service required",
+        icon: "fa-building",
+        badge: "Multiple Services",
+        badge_color: "purple"
+      },
+      {
+        name: "CSC Financial Services",
+        description: "Banking, insurance, pension schemes (APY, PMSBY, PMJJBY), DigiPay, and mutual funds through CSC centers.",
+        category: "Financial",
+        price: 500,
+        processing_time: "1-3 days",
+        requirements: "Identity proof, account details, and other relevant documents",
+        icon: "fa-money-bill",
+        badge: "Financial Solutions",
+        badge_color: "green"
+      },
+      {
+        name: "CSC Education Services",
+        description: "PMGDISHA digital literacy, skill development courses, NDLM registration and online educational services.",
+        category: "Education",
+        price: 400,
+        processing_time: "1-2 days",
+        requirements: "Educational details, identity proof, and photographs",
+        icon: "fa-graduation-cap",
+        badge: "Skill Development",
+        badge_color: "blue"
+      },
+      {
+        name: "CSC Utility Services",
+        description: "Electricity bill payments, mobile/DTH recharges, water bill payments, and other utility services.",
+        category: "Utilities",
+        price: 200,
+        processing_time: "Same day",
+        requirements: "Bill/connection details and payment amount",
+        icon: "fa-bolt",
+        badge: "Quick Service",
+        badge_color: "yellow"
+      },
+      {
+        name: "CSC Agriculture Services",
+        description: "PM-KISAN registration, soil health card, crop insurance, and agricultural advisory services.",
+        category: "Agriculture",
+        price: 350,
+        processing_time: "2-4 days",
+        requirements: "Land records, identity proof, and bank account details",
+        icon: "fa-seedling",
+        badge: "Farmer Support",
+        badge_color: "green"
+      },
+      {
+        name: "CSC G2C Services",
+        description: "Government to Citizen services including welfare schemes, MGNREGA job cards, land records, and social security pensions.",
+        category: "Government",
+        price: 250,
+        processing_time: "3-7 days",
+        requirements: "Identity proof, address documents, and scheme-specific requirements",
+        icon: "fa-id-card",
+        badge: "Government Schemes",
+        badge_color: "blue"
+      },
+      {
+        name: "CSC Healthcare Services",
+        description: "Telemedicine, Ayushman Bharat registration, health insurance, and wellness services through CSC-PHCs.",
+        category: "Healthcare",
+        price: 300,
+        processing_time: "1-3 days",
+        requirements: "Health records, identity proof, and family details",
+        icon: "fa-stethoscope",
+        badge: "Health Support",
+        badge_color: "red"
+      },
+      {
+        name: "CSC Digital Services",
+        description: "Digital India services including Digi Locker, digital signatures, WiFi Choupal, and PMGDISHA training.",
+        category: "Digital",
+        price: 450,
+        processing_time: "1-2 days",
+        requirements: "Digital documents, identity proof, and email address",
+        icon: "fa-mobile-alt",
+        badge: "Digital Empowerment",
+        badge_color: "purple"
+      },
+      {
+        name: "CSC Travel Services",
+        description: "IRCTC train ticket booking, bus tickets, flight tickets, and hotel bookings through CSC centers.",
+        category: "Travel",
+        price: 250,
+        processing_time: "Same day",
+        requirements: "Travel details, identity proof, and payment information",
+        icon: "fa-train",
+        badge: "Travel Solutions",
+        badge_color: "orange"
       },
       {
         name: "Certificates",
