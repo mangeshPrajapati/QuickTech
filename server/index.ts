@@ -1,7 +1,10 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import dotenv from "dotenv"
+dotenv.config();
 
+// dotenv().Config
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -58,7 +61,11 @@ app.use((req, res, next) => {
 
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client
-  const port = 5000;
+  const port = process.env.FRONTEND_PORT
+  ? parseInt(process.env.FRONTEND_PORT, 10)
+  : 5173;
+  console.log(typeof(port))
+  console.log(port)
   server.listen({
     port,
     host: "0.0.0.0",

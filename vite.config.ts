@@ -7,6 +7,9 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const PORT = process.env.FRONTEND_PORT
+  ? parseInt(process.env.FRONTEND_PORT, 10)
+  : 5173;
 
 export default defineConfig({
   plugins: [
@@ -27,6 +30,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "client", "src"),
       "@shared": path.resolve(__dirname, "shared"),
     },
+  },
+  server: {
+    host: "0.0.0.0",
+    port: PORT,
+    strictPort: false,
   },
   root: path.resolve(__dirname, "client"),
   build: {

@@ -6,7 +6,8 @@ import {
   FaFacebook, 
   FaInstagram, 
   FaTwitter, 
-  FaLinkedin 
+  FaLinkedin, 
+  FaWhatsapp
 } from "react-icons/fa";
 
 export default function Footer() {
@@ -27,13 +28,13 @@ export default function Footer() {
                 <span className="sr-only">Facebook</span>
                 <FaFacebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a href="https://www.instagram.com/quicktech_in?igsh=MWZ0Z2hha3pha2k4Ng==" className="text-gray-400 hover:text-white">
                 <span className="sr-only">Instagram</span>
                 <FaInstagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white">
-                <span className="sr-only">Twitter</span>
-                <FaTwitter className="h-5 w-5" />
+              <a href="https://wa.me/message/UGCJAD76JIU2F1" className="text-gray-400 hover:text-white">
+                <span className="sr-only">Whatsapp</span>
+                <FaWhatsapp className="h-5 w-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white">
                 <span className="sr-only">LinkedIn</span>
@@ -76,15 +77,15 @@ export default function Footer() {
             <ul className="mt-4 space-y-2">
               <li className="flex items-center text-gray-400">
                 <MapPin className="h-5 w-5 text-orange-500 mr-3" />
-                <span>123 Main Street, New Delhi, India</span>
+                <span>Rudraksha, Dahisar, Mumbai</span>
               </li>
               <li className="flex items-center text-gray-400">
                 <Phone className="h-5 w-5 text-orange-500 mr-3" />
-                <span>+91 98765 43210</span>
+                <span>+91 7304281255</span>
               </li>
               <li className="flex items-center text-gray-400">
                 <Mail className="h-5 w-5 text-orange-500 mr-3" />
-                <span>info@quicktech.com</span>
+                <span>quick7tech.com</span>
               </li>
               <li className="mt-6">
                 <h4 className="text-sm font-semibold text-white tracking-wider uppercase">Subscribe</h4>
